@@ -546,7 +546,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
                 self.editing = YES;
             }
         }
-        return;
+        
     }
     
     switch (longPressGesture.state) 
@@ -630,14 +630,14 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         );
         
         
-        CGFloat threshhold = _itemSize.height;
+        CGFloat threshhold = self.bounds.size.width*0.1;
         CGPoint offset = self.contentOffset;
         CGPoint locationInScroll = [_sortingPanGesture locationInView:self];
         
         // Going down
         if (locationInMainView.x + threshhold > self.bounds.size.width) 
         {            
-            offset.x += _itemSize.width / 2;
+            offset.x += self.bounds.size.width;
             
             if (offset.x > _maxPossibleContentOffset.x) 
             {
@@ -647,7 +647,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         // Going up
         else if (locationInMainView.x - threshhold <= 0) 
         {            
-            offset.x -= _itemSize.width / 2;
+            offset.x -= self.bounds.size.width;
             
             if (offset.x < _minPossibleContentOffset.x) 
             {
