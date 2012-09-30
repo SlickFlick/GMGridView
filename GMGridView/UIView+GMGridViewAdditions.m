@@ -43,10 +43,14 @@
 {
     if (enabled) 
     {
-        CGFloat rotation = 0.03;
-        
+        float rand  = (float) random()/RAND_MAX;
+        CGFloat rotation = 0.02+rand*0.01;
+        float delay = rand*0.13;
+        float duration = 0.13;
+
         CABasicAnimation *shake = [CABasicAnimation animationWithKeyPath:@"transform"];
-        shake.duration = 0.13;
+        shake.duration = duration;
+        shake.beginTime = delay;
         shake.autoreverses = YES;
         shake.repeatCount  = MAXFLOAT;
         shake.removedOnCompletion = NO;

@@ -477,11 +477,11 @@
     
     int position = [self positionForItemAtColumn:col row:row page:page];
  
-    if (position >= [self itemCount] || position < 0) 
-    {
-        position = GMGV_INVALID_POSITION;
-    }
-    else
+    //if (position >= [self itemCount] || position < 0)
+    //{
+    //    position = GMGV_INVALID_POSITION;
+    //}
+    //else
     {
         CGPoint itemOrigin = [self originForItemAtPosition:position];
         CGRect itemFrame = CGRectMake(itemOrigin.x, 
@@ -491,7 +491,7 @@
         
         if (!CGRectContainsPoint(itemFrame, location)) 
         {
-            position = GMGV_INVALID_POSITION;
+            //position = GMGV_INVALID_POSITION;
         }
     }
     

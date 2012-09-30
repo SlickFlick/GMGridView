@@ -53,6 +53,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     UIRotationGestureRecognizer  *_rotationGesture;
     UIPanGestureRecognizer       *_panGesture;
     
+    NSDate* lastPageFlip;
+    
     // General vars
     NSInteger _numberTotalItems;
     CGSize    _itemSize;
@@ -191,6 +193,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     _tapGesture.numberOfTouchesRequired = 1;
     _tapGesture.cancelsTouchesInView = NO;
     [self addGestureRecognizer:_tapGesture];
+    
+    lastPageFlip = [NSDate date];
     
     /////////////////////////////
     // Transformation gestures :
@@ -676,8 +680,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
             }
         }
         
-        if (offset.x != self.contentOffset.x || offset.y != self.contentOffset.y) 
+        if ((offset.x != self.contentOffset.x || offset.y != self.contentOffset.y) && (-[lastPageFlip timeIntervalSinceNow])>0.25)
         {
+            lastPageFlip =[NSDate date];
             [UIView animateWithDuration:kDefaultAnimationDuration 
                                   delay:0
                                 options:kDefaultAnimationOptions
@@ -744,7 +749,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         [_sortMovingItem shake:NO];
     }
     
-    _sortMovingItem.tag = _sortFuturePosition + kTagOffset;
+    _sortMovingItem.tag = MIN(_sortFuturePosition,_numberTotalItems-1) + kTagOffset;
     
     CGRect frameInScroll = [self.mainSuperView convertRect:_sortMovingItem.frame toView:self];
     
@@ -754,7 +759,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 	
 	_sortMovingItem.highlighted = NO;
     
-    CGPoint newOrigin = [self.layoutStrategy originForItemAtPosition:_sortFuturePosition];
+    CGPoint newOrigin = [self.layoutStrategy originForItemAtPosition:MIN(_sortFuturePosition,_numberTotalItems-1)];
     CGRect newFrame = CGRectMake(newOrigin.x, newOrigin.y, _itemSize.width, _itemSize.height);
     
     [UIView animateWithDuration:kDefaultAnimationDuration 
@@ -781,9 +786,10 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 - (void)sortingMoveDidContinueToPoint:(CGPoint)point
 {
     int position = [self.layoutStrategy itemPositionFromLocation:point];
-    int tag = position + kTagOffset;
     
-    if (position != GMGV_INVALID_POSITION && position != _sortFuturePosition && position < _numberTotalItems) 
+    int tag = MIN(position,_numberTotalItems-1) + kTagOffset;
+    
+    if (position != GMGV_INVALID_POSITION && position != _sortFuturePosition) 
     {
         BOOL positionTaken = NO;
         
@@ -825,7 +831,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
                         }
                     }
                     
-                    [self.sortingDelegate GMGridView:self moveItemAtIndex:_sortFuturePosition toIndex:position];
+                    [self.sortingDelegate GMGridView:self moveItemAtIndex:MIN(_numberTotalItems-1,_sortFuturePosition) toIndex:MIN(position,_numberTotalItems-1)];
                     [self relayoutItemsAnimated:YES];
                     
                     break;
