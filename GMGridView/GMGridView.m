@@ -1314,17 +1314,20 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
 {    
     void (^layoutBlock)(void) = ^{
         for (UIView *view in [self itemSubviews])
-        {        
-            if (view != _sortMovingItem && view != _transformingItem) 
+        {
+            if(view.tag != kTagOffset-1)
             {
-                NSInteger index = view.tag - kTagOffset;
-                CGPoint origin = [self.layoutStrategy originForItemAtPosition:index];
-                CGRect newFrame = CGRectMake(origin.x, origin.y, _itemSize.width, _itemSize.height);
-                
-                // IF statement added for performance reasons (Time Profiling in instruments)
-                if (!CGRectEqualToRect(newFrame, view.frame)) 
+                if (view != _sortMovingItem && view != _transformingItem)
                 {
-                    view.frame = newFrame;
+                    NSInteger index = view.tag - kTagOffset;
+                    CGPoint origin = [self.layoutStrategy originForItemAtPosition:index];
+                    CGRect newFrame = CGRectMake(origin.x, origin.y, _itemSize.width, _itemSize.height);
+                    
+                    // IF statement added for performance reasons (Time Profiling in instruments)
+                    if (!CGRectEqualToRect(newFrame, view.frame))
+                    {
+                        view.frame = newFrame;
+                    }
                 }
             }
         }
@@ -1561,7 +1564,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     
     currentView.tag = kTagOffset - 1;
     BOOL shouldScroll = animation & GMGridViewItemAnimationScroll;
-    BOOL animate = animation & GMGridViewItemAnimationFade;
+    BOOL animate = NO;//animation & GMGridViewItemAnimationFade;
     [UIView animateWithDuration:animate ? kDefaultAnimationDuration : 0.f 
                           delay:0.f
                         options:kDefaultAnimationOptions
