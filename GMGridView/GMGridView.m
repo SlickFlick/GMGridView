@@ -1161,7 +1161,10 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     {
         if (!self.editing) {
             [self cellForItemAtIndex:position].highlighted = NO;
-            [self.actionDelegate GMGridView:self didTapOnItemAtIndex:position];
+            if (position < _numberTotalItems)
+            {
+                [self.actionDelegate GMGridView:self didTapOnItemAtIndex:position];
+            }
         }
     }
     else
