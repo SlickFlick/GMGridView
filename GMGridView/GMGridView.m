@@ -499,7 +499,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
             CGPoint locationTouch = [_tapGesture locationInView:self];
             NSInteger position = [self.layoutStrategy itemPositionFromLocation:locationTouch];
             
-            valid = (position == GMGV_INVALID_POSITION);
+            valid = YES;
         } else {
             valid = !isScrolling && !self.isEditing && ![_longPressGesture hasRecognizedValidGesture];
         }
@@ -1166,9 +1166,16 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
                 [self.actionDelegate GMGridView:self didTapOnItemAtIndex:position];
             }
         }
+        if (position >= _numberTotalItems)
+        {
+            if ([self.actionDelegate respondsToSelector:@selector(GMGridViewDidTapOnEmptySpace:)])
+            {
+                [self.actionDelegate GMGridViewDidTapOnEmptySpace:self];
+            }
+        }
     }
     else
-    { 
+    {
         if([self.actionDelegate respondsToSelector:@selector(GMGridViewDidTapOnEmptySpace:)])
         {
             [self.actionDelegate GMGridViewDidTapOnEmptySpace:self];
