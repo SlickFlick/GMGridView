@@ -511,7 +511,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     }
     else if (gestureRecognizer == _sortingPanGesture) 
     {
-        valid = (_sortMovingItem != nil && [_longPressGesture hasRecognizedValidGesture]);
+        valid = (_sortMovingItem != nil && [_longPressGesture hasRecognizedValidGesture]) || (self.isEditing);
     }
     else if(gestureRecognizer == _rotationGesture || gestureRecognizer == _pinchGesture || gestureRecognizer == _panGesture)
     {
@@ -595,6 +595,14 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     switch (panGesture.state) 
     {
         case UIGestureRecognizerStateEnded:
+        {
+            if (_sortMovingItem)
+            {
+                CGPoint location = [panGesture locationInView:self];
+                [self sortingMoveDidStopAtPoint:location];
+            }
+            break;
+        }
         case UIGestureRecognizerStateCancelled:
         case UIGestureRecognizerStateFailed:
         {
@@ -602,9 +610,21 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
             break;
         }
         case UIGestureRecognizerStateBegan:
-        {            
+        {
             _autoScrollActive = YES;
             [self sortingAutoScrollMovementCheck];
+
+            if (!_sortMovingItem)
+            {
+                CGPoint location = [panGesture locationInView:self];
+                
+                NSInteger position = [self.layoutStrategy itemPositionFromLocation:location];
+                
+                if (position != GMGV_INVALID_POSITION)
+                {
+                    [self sortingMoveDidStartAtPoint:location];
+                }
+            }
             
             break;
         }
