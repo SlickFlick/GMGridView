@@ -676,9 +676,10 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
             }
         }
         
-        if (offset.x != self.contentOffset.x || offset.y != self.contentOffset.y) 
+        if ((offset.x != self.contentOffset.x || offset.y != self.contentOffset.y) && (-[lastPageFlip timeIntervalSinceNow])>0.40)
         {
-            [UIView animateWithDuration:kDefaultAnimationDuration 
+            lastPageFlip =[NSDate date];
+            [UIView animateWithDuration:kDefaultAnimationDuration
                                   delay:0
                                 options:kDefaultAnimationOptions
                              animations:^{
