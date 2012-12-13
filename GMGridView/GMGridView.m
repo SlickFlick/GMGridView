@@ -78,6 +78,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     
     // Rotation
     BOOL _rotationActive;
+    
+    NSDate* lastPageFlip;
 }
 
 @property (nonatomic, readonly) BOOL itemsSubviewsCacheIsValid;
@@ -195,7 +197,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     [self addGestureRecognizer:_tapGesture];
     
     lastPageFlip = [NSDate date];
-    
+
     /////////////////////////////
     // Transformation gestures :
     _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGestureUpdated:)];
@@ -680,7 +682,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
             }
         }
         
-        if ((offset.x != self.contentOffset.x || offset.y != self.contentOffset.y) && (-[lastPageFlip timeIntervalSinceNow])>0.40)
+        if ((offset.x != self.contentOffset.x || offset.y != self.contentOffset.y) && (-[lastPageFlip timeIntervalSinceNow])>0.50)
         {
             lastPageFlip =[NSDate date];
             [UIView animateWithDuration:kDefaultAnimationDuration
