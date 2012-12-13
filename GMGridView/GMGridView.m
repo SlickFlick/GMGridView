@@ -78,8 +78,6 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     
     // Rotation
     BOOL _rotationActive;
-    
-    NSDate* lastPageFlip;
 }
 
 @property (nonatomic, readonly) BOOL itemsSubviewsCacheIsValid;
