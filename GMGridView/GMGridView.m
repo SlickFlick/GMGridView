@@ -496,8 +496,8 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
     if (gestureRecognizer == _tapGesture) 
     {
         if (self.editing && self.disableEditOnEmptySpaceTap) {
-            CGPoint locationTouch = [_tapGesture locationInView:self];
-            NSInteger position = [self.layoutStrategy itemPositionFromLocation:locationTouch];
+            //CGPoint locationTouch = [_tapGesture locationInView:self];
+            //NSInteger position = [self.layoutStrategy itemPositionFromLocation:locationTouch];
             
             valid = YES;
         } else {
