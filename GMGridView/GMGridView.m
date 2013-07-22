@@ -454,7 +454,9 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
             if (index != GMGV_INVALID_POSITION)
             {
                 BOOL allowEdit = editing && [self.dataSource GMGridView:self canDeleteItemAtIndex:index];
+                BOOL allowShake = editing && [self.sortingDelegate GMGridView:self shouldAllowShakingBehaviorWhenMovingCell:cell atIndex:index];
                 [cell setEditing:allowEdit animated:animated];
+                [cell shake:allowShake];
             }
         }
         
